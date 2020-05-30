@@ -14,7 +14,7 @@ from collections import defaultdict
 from graphsage.encoders import Encoder
 from graphsage.aggregators import MeanAggregator
 from continue_learning.continuum import Continuum
-# from continue_learning.continue_graphsage import IncrementSupervisedGraphSage
+from continue_learning.continue_graphsage import IncrementSupervisedGraphSage
 
 
 def run_cora(feat_data, labels, adj_lists,args):
@@ -30,7 +30,7 @@ def run_cora(feat_data, labels, adj_lists,args):
     enc1.num_samples = 5
     enc2.num_samples = 5
 
-    graphsage = IncrementSupervisedGraphSage(7, enc2, labels)
+    graphsage = IncrementSupervisedGraphSage(7, enc2, labels, args)
 
     val_data = Continuum(name="cora", data_type='val', download=True)
     val = val_data.nodes()
@@ -46,7 +46,6 @@ def run_cora(feat_data, labels, adj_lists,args):
 
     val_output = graphsage.forward(val) 
     print("Validation F1:", f1_score(labels[val], val_output.data.numpy().argmax(axis=1), average="micro"))
-    print("Average batch time:", np.mean(times))
 
 
 def run_cora_incremental(feat_data, labels, adj_lists, args):
@@ -61,7 +60,7 @@ def run_cora_incremental(feat_data, labels, adj_lists, args):
     enc1.num_samples = 5
     enc2.num_samples = 5
 
-    graphsage = IncrementSupervisedGraphSage(7, enc2, labels, args, memory_size = args.memory_size)
+    graphsage = IncrementSupervisedGraphSage(7, enc2, labels, args)
 
     val_data = Continuum(name="cora", data_type='val', download=True)
     val = val_data.nodes()
